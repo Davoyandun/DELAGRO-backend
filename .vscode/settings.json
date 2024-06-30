@@ -1,6 +1,13 @@
 {
     "cSpell.words": [
+        "dotenv",
         "fastapi",
+        "mysql",
+        "mysqlconnector",
+        "pydantic",
+        "sessionmaker",
+        "sqlalchemy",
+        "SQLALCHEMY",
         "uvicorn"
     ]
 }
