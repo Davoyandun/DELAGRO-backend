@@ -5,7 +5,7 @@ UVICORN := uvicorn
 BLACK := black
 PYTEST := pytest
 
-SRC_DIR := src
+SRC_DIR := app
 APP := $(SRC_DIR)/main.py
 TEST_DIR := tests
 .PHONY: all run test format install
