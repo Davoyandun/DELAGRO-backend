@@ -7,7 +7,7 @@ PYTEST := pytest
 
 SRC_DIR := app
 APP := $(SRC_DIR)/main.py
-TEST_DIR := tests
+TEST_DIR := __test__
 .PHONY: all run test format install
 
 install:
@@ -17,7 +17,7 @@ run:
 	PYTHONPATH=$(SRC_DIR) $(UVICORN) main:app --reload
 
 test:
-	PYTHONPATH=$(SRC_DIR) $(PYTEST) $(TEST_DIR)
+	$(PYTEST) $(TEST_DIR)
 
 format:
 	$(BLACK) $(SRC_DIR)

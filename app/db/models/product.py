@@ -16,12 +16,14 @@ product_crop_association = Table(
     Column("crop_id", Integer, ForeignKey("crops.id")),
 )
 
+
 class Product(Base):
     __tablename__ = "products"
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(255), index=True)  
-    description = Column(String(255)) 
+    name = Column(String(255), index=True)
+    description = Column(String(255))
     price = Column(Integer)
+    img_url = Column(String(255))  # Asegúrate de que esta columna esté definida
     pests = relationship(
         "Pest", secondary=product_pest_association, back_populates="products"
     )

@@ -1,5 +1,6 @@
 {
     "cSpell.words": [
+        "autoflush",
         "dotenv",
         "fastapi",
         "mysql",
@@ -8,6 +9,19 @@
         "sessionmaker",
         "sqlalchemy",
         "SQLALCHEMY",
+        "sqlite",
         "uvicorn"
+    ],
+    "python.testing.pytestArgs": [
+        "__test__"
+    ],
+    "python.testing.unittestEnabled": true,
+    "python.testing.pytestEnabled": false,
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        "./__test__",
+        "-p",
+        "*test.py"
     ]
 }
