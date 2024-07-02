@@ -8,9 +8,7 @@ router = APIRouter()
 
 
 @router.put("/{pest_id}", response_model=Pest, status_code=status.HTTP_200_OK)
-def update_pest(
-    pest_id: int, pest: PestCreate, db: Session = Depends(get_db)
-) -> Pest:
+def update_pest(pest_id: int, pest: PestCreate, db: Session = Depends(get_db)) -> Pest:
 
     pest_repo = PestRepository(db)
     db_pest = pest_repo.get(pest_id)

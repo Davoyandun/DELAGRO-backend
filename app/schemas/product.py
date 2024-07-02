@@ -12,8 +12,10 @@ class ProductBase(BaseModel):
 class ProductCreate(ProductBase):
     pest_ids: List[int] = []
     crop_ids: List[int] = []
+
     class Config:
         extra = "forbid"
+
 
 class Product(ProductBase):
     id: int

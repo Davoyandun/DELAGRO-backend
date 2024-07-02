@@ -7,8 +7,6 @@ from sqlalchemy.orm import sessionmaker
 from app.db.base import Base
 from app.db.session import get_db
 
-
-# Override the get_db dependency with a testing session
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 
 engine = create_engine(
@@ -27,11 +25,7 @@ def override_get_db():
 
 app.dependency_overrides[get_db] = override_get_db
 
-@pytest.fixture(scope="module")
-def test_app():
-    yield app
-
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="function")
 def db_session():
     connection = engine.connect()
     transaction = connection.begin()
@@ -40,17 +34,16 @@ def db_session():
     session.close()
     transaction.rollback()
     connection.close()
+    Base.metadata.drop_all(bind=engine)
+    Base.metadata.create_all(bind=engine)
 
+@pytest.fixture(scope="function")
+def test_client(db_session):
+    client = TestClient(app)
+    app.dependency_overrides[get_db] = lambda: db_session
+    yield client
+    app.dependency_overrides[get_db] = get_db
 
-
-# Create a new TestClient instance for each test
-client = TestClient(app)
-
-@pytest.fixture(scope="module")
-def test_client():
-    return client
-
-# Create a new Product instance for each test
 @pytest.fixture
 def new_product():
     return ProductCreate(

@@ -1,9 +1,9 @@
-
 import os
 from pydantic_settings import BaseSettings
 from dotenv import load_dotenv
 
 load_dotenv()
+
 
 class Settings(BaseSettings):
     API_V1_STR: str = os.getenv("API_V1_STR", "/api/v1")
@@ -18,5 +18,6 @@ class Settings(BaseSettings):
     @property
     def SQLALCHEMY_DATABASE_URI(self) -> str:
         return f"mysql+mysqlconnector://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+
 
 settings = Settings()

@@ -12,6 +12,7 @@ class CropCreate(CropBase):
     class Config:
         extra = "forbid"
 
+
 class Crop(CropBase):
     id: int
     products: Optional[List[int]] = []

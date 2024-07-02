@@ -9,6 +9,7 @@ class PestBase(BaseModel):
 
 class PestCreate(PestBase):
     product_ids: List[int] = []
+
     class Config:
         extra = "forbid"
 
