@@ -3,7 +3,6 @@ from typing import Type, TypeVar, Generic
 
 T = TypeVar("T")
 
-
 class BaseRepository(Generic[T]):
 
     def __init__(self, db: Session, model: Type[T]):
@@ -22,11 +21,13 @@ class BaseRepository(Generic[T]):
     def get_all(self) -> list[T]:
         return self.db.query(self.model).all()
 
-    def update(self, item: T) -> T:
-        self.db.add(item)
+    def update(self, item_id: int, item: T) -> T:
+        db_item = self.get(item_id)
+        for key, value in item.dict().items():
+            setattr(db_item, key, value)
         self.db.commit()
-        self.db.refresh(item)
-        return item
+        self.db.refresh(db_item)
+        return db_item
 
     def delete(self, item: T) -> T:
         self.db.delete(item)
