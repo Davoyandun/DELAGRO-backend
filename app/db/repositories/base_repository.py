@@ -3,6 +3,7 @@ from typing import Type, TypeVar, Generic
 
 T = TypeVar("T")
 
+
 class BaseRepository(Generic[T]):
 
     def __init__(self, db: Session, model: Type[T]):

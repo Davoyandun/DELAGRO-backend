@@ -9,4 +9,3 @@ class Pest(Base):
     name = Column(String(255), index=True)
     description = Column(String(255))
     products = relationship("Product", secondary="product_pest", back_populates="pests")
-

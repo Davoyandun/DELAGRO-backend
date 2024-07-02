@@ -6,6 +6,7 @@ from app.db.repositories.pest_repository import PestRepository
 
 router = APIRouter()
 
+
 @router.delete("/{pest_id}", response_model=Pest, status_code=status.HTTP_200_OK)
 def delete_pest(pest_id: int, db: Session = Depends(get_db)) -> Pest:
 
