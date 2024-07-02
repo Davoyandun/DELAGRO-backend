@@ -4,6 +4,7 @@ from typing import List, Optional
 
 class CropBase(BaseModel):
     name: str
+    description: str
 
 
 class CropCreate(CropBase):
