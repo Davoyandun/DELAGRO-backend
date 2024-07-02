@@ -2,6 +2,7 @@ import pytest
 from fastapi.testclient import TestClient
 from app.main import app
 from app.schemas.product import ProductCreate
+from app.schemas.pest import PestCreate
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app.db.base import Base
@@ -53,4 +54,11 @@ def new_product():
         img_url="test image",
         pest_ids=[],
         crop_ids=[]
+    )
+
+@pytest.fixture
+def new_pest():
+    return PestCreate(
+        name="test pest",
+        description="test description"
     )

@@ -23,7 +23,7 @@ class Product(Base):
     name = Column(String(255), index=True)
     description = Column(String(255))
     price = Column(Integer)
-    img_url = Column(String(255))  # Asegúrate de que esta columna esté definida
+    img_url = Column(String(255))
     pests = relationship(
         "Pest", secondary=product_pest_association, back_populates="products"
     )
