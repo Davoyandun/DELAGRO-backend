@@ -1,4 +1,5 @@
 import pytest
+import os
 from fastapi.testclient import TestClient
 from app.main import app
 from app.schemas.product import ProductCreate
@@ -10,7 +11,9 @@ from sqlalchemy.orm import sessionmaker
 from app.db.base import Base
 from app.db.session import get_db
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+SQLALCHEMY_DATABASE_URL = f"sqlite:///{os.path.join(current_dir, 'test.db')}"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
@@ -77,5 +80,8 @@ def new_crop():
 @pytest.fixture
 def new_blog():
     return BlogCreate(
-        author="test author", content="test text", title="test title", img_url="test image"
+        author="test author",
+        content="test text",
+        title="test title",
+        img_url="test image",
     )
