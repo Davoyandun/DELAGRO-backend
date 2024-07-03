@@ -46,8 +46,7 @@ jobs:
             ${{ runner.os }}-pip-
 
       - name: Install dependencies
-        run: |
-          make install
+        run: make install
 
       - name: Set environment variables
         run: |
@@ -79,18 +78,17 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
-      - name: Install dependencies
-        run: |
-          make install
+      - name: Install dependencies (if needed)
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: make install
 
       - name: Format code
-        run: |
-          make format
+        run: make format
 
   test:
     name: Run Tests
     runs-on: ubuntu-latest
-    needs: format
+    needs: [setup, format]
 
     steps:
       - name: Checkout code
@@ -109,9 +107,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
-      - name: Install dependencies
-        run: |
-          make install
+      - name: Install dependencies (if needed)
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: make install
 
       - name: Set environment variables
         run: |
@@ -122,5 +120,4 @@ jobs:
           echo "DB_NAME=testdb" >> $GITHUB_ENV
 
       - name: Run tests
-        run: |
-          pytest --cov=app --cov-report=xml
+        run: pytest
