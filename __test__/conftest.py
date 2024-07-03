@@ -4,6 +4,7 @@ from app.main import app
 from app.schemas.product import ProductCreate
 from app.schemas.pest import PestCreate
 from app.schemas.crop import CropCreate
+from app.schemas.blog import BlogCreate
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app.db.base import Base
@@ -71,3 +72,10 @@ def new_pest():
 @pytest.fixture
 def new_crop():
     return CropCreate(name="test crop", description="test description", product_ids=[])
+
+
+@pytest.fixture
+def new_blog():
+    return BlogCreate(
+        author="test author", content="test text", title="test title", img_url="test image"
+    )
