@@ -123,7 +123,4 @@ jobs:
 
       - name: Run tests
         run: |
-          make test
-        env:
-          DATABASE_URL: postgres://testuser:testpassword@localhost:5432/testdb
-          CI: true
+          pytest --cov=app --cov-report=xml
