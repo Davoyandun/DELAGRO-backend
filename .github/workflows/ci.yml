@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - 17-implement-ci
+      - feature/*
   pull_request:
     branches:
       - main
@@ -13,23 +13,49 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      db:
+        image: postgres:13
+        env:
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpassword
+          POSTGRES_DB: testdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U testuser -d testdb"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.11'
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.11"
 
-    - name: Install dependencies
-      run: |
-        make install
+      - name: Install dependencies
+        run: |
+          make install
 
-    - name: Format code
-      run: |
-        make format
+      - name: Set environment variables
+        run: |
+          echo "DB_USER=testuser" >> $GITHUB_ENV
+          echo "DB_PASSWORD=testpassword" >> $GITHUB_ENV
+          echo "DB_HOST=localhost" >> $GITHUB_ENV
+          echo "DB_PORT=5432" >> $GITHUB_ENV
+          echo "DB_NAME=testdb" >> $GITHUB_ENV
 
-    - name: Run tests
-      run: |
-        make test
+      - name: Format code
+        run: |
+          make format
+
+      - name: Run tests
+        run: |
+          make test
+        env:
+          DATABASE_URL: postgres://testuser:testpassword@localhost:5432/testdb
+          CI: true
