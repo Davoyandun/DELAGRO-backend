@@ -8,6 +8,7 @@ def test_create_blog(new_blog, test_client):
     assert response.json()["title"] == new_blog.title
     assert response.json()["content"] == new_blog.content
     assert response.json()["author"] == new_blog.author
+    
 
 
 def test_create_blog_invalid(test_client):

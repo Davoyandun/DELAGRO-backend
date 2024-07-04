@@ -39,7 +39,15 @@ from app.use_cases.pest_use_cases import (
     UpdatePestUseCase,
     DeletePestUseCase,
 )
+from app.use_cases.blog_use_cases import (
+    CreateBlogUseCase,
+    ListBlogsUseCase,
+    ListBlogUseCase,
+    UpdateBlogUseCase,
+    DeleteBlogUseCase,
+)
 
+# Database setup
 current_dir = os.path.dirname(os.path.abspath(__file__))
 SQLALCHEMY_DATABASE_URL = f"sqlite:///{os.path.join(current_dir, 'test.db')}"
 
@@ -61,24 +69,22 @@ def override_get_db():
 
 app.dependency_overrides[get_db] = override_get_db
 
-# Mock services
 mock_get_pests = Mock(return_value=[])
 mock_get_crops = Mock(return_value=[])
 
 
-# Mock repository
 class MockProductRepository(ProductRepository):
     def create(self, product: ProductModel):
         product.id = 1
         return product
 
 
-# Dependency override for CreateProductUseCase
 def override_create_product_use_case():
     product_repo = MockProductRepository(None)
     return CreateProductUseCase(product_repo, mock_get_pests, mock_get_crops)
 
 
+# Fixtures
 @pytest.fixture(scope="function")
 def db_session():
     connection = engine.connect()
@@ -195,12 +201,12 @@ def mock_crop_repo():
 
 
 @pytest.fixture
-def mock_pest_repo():
+def mock_blog_repo():
     return Mock()
 
 
 @pytest.fixture
-def mock_product_repo():
+def mock_pest_repo():
     return Mock()
 
 
@@ -235,13 +241,23 @@ def create_pest_use_case(mock_pest_repo, mock_get_product):
 
 
 @pytest.fixture
+def create_blog_use_case(mock_blog_repo):
+    return CreateBlogUseCase(mock_blog_repo)
+
+
+@pytest.fixture
 def list_crops_use_case(mock_crop_repo):
     return ListCropsUseCase(mock_crop_repo)
 
 
 @pytest.fixture
 def list_pests_use_case(mock_pest_repo):
-    return ListPestsUseCase(mock_crop_repo)
+    return ListPestsUseCase(mock_pest_repo)
+
+
+@pytest.fixture
+def list_blogs_use_case(mock_blog_repo):
+    return ListBlogsUseCase(mock_blog_repo)
 
 
 @pytest.fixture
@@ -250,13 +266,13 @@ def list_pest_use_case(mock_pest_repo):
 
 
 @pytest.fixture
-def list_crop_use_case(mock_crop_repo):
-    return ListCropUseCase(mock_crop_repo)
+def list_blog_use_case(mock_blog_repo):
+    return ListBlogUseCase(mock_blog_repo)
 
 
 @pytest.fixture
-def list_pest_use_case(mock_pest_repo):
-    return ListCropUseCase(mock_pest_repo)
+def list_crop_use_case(mock_crop_repo):
+    return ListCropUseCase(mock_crop_repo)
 
 
 @pytest.fixture
@@ -270,6 +286,11 @@ def update_pest_use_case(mock_pest_repo):
 
 
 @pytest.fixture
+def update_blog_use_case(mock_blog_repo):
+    return UpdateBlogUseCase(mock_blog_repo)
+
+
+@pytest.fixture
 def delete_crop_use_case(mock_crop_repo):
     return DeleteCropUseCase(mock_crop_repo)
 
@@ -277,3 +298,8 @@ def delete_crop_use_case(mock_crop_repo):
 @pytest.fixture
 def delete_pest_use_case(mock_pest_repo):
     return DeletePestUseCase(mock_pest_repo)
+
+
+@pytest.fixture
+def delete_blog_use_case(mock_blog_repo):
+    return DeleteBlogUseCase(mock_blog_repo)

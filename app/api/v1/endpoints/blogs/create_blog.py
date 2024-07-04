@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.schemas.blog import Blog, BlogCreate
 from app.db.repositories.blog_repository import BlogRepository
-from app.db.models.blog import Blog as BlogModel
+from app.use_cases.blog_use_cases import CreateBlogUseCase
 
 router = APIRouter()
 
@@ -12,14 +12,10 @@ router = APIRouter()
 def create_blog(blog: BlogCreate = Body(...), db: Session = Depends(get_db)) -> Blog:
 
     blog_repo = BlogRepository(db)
-    db_blog = BlogModel(
-        author=blog.author, content=blog.content, title=blog.title, img_url=blog.img_url
-    )
+    create_blog_use_case = CreateBlogUseCase(blog_repo)
 
     try:
-
-        created_blog = blog_repo.create(db_blog)
-
+        created_blog = create_blog_use_case.execute(blog)
         return created_blog
 
     except HTTPException as http_exc:
