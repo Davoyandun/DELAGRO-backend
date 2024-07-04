@@ -11,13 +11,13 @@ router = APIRouter()
 
 @router.get("/", response_model=List[Crop], status_code=status.HTTP_200_OK)
 def read_crops(db: Session = Depends(get_db)) -> List[Crop]:
+    crop_repo = CropRepository(db)
+    list_crops_use_case = ListCropsUseCase(crop_repo)
 
     try:
-        crop_repo = CropRepository(db)
-        list_crops_use_case = ListCropsUseCase(crop_repo)
-
         crops = list_crops_use_case.execute()
         return crops
+
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

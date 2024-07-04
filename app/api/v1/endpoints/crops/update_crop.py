@@ -13,9 +13,11 @@ def update_crop(crop_id: int, crop: CropCreate, db: Session = Depends(get_db)) -
 
     crop_repo = CropRepository(db)
     update_crop_use_case = UpdateCropUseCase(crop_repo)
+
     try:
         updated_crop = update_crop_use_case.execute(crop_id, crop)
         return updated_crop
+
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
