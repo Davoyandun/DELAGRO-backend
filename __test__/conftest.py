@@ -18,7 +18,13 @@ from app.db.models.crop import Crop as CropModel
 from app.db.repositories.product_repository import ProductRepository
 from app.services.pest_service import get_pests
 from app.services.crop_service import get_crops
-from app.use_cases.product_use_cases import CreateProductUseCase
+from app.use_cases.product_use_cases import (
+    CreateProductUseCase,
+    ListProductsUseCase,
+    UpdateProductUseCase,
+    DeleteProductUseCase,
+    ListProductUseCase,
+)
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 SQLALCHEMY_DATABASE_URL = f"sqlite:///{os.path.join(current_dir, 'test.db')}"
@@ -48,7 +54,7 @@ mock_get_crops = Mock(return_value=[])
 
 # Mock repository
 class MockProductRepository(ProductRepository):
-    def create(self, product: ProductModel) :
+    def create(self, product: ProductModel):
         product.id = 1
         return product
 
@@ -112,7 +118,6 @@ def new_blog():
     )
 
 
-
 @pytest.fixture
 def product_create():
     return ProductCreate(
@@ -121,31 +126,60 @@ def product_create():
         price=10,
         img_url="test image",
         pest_ids=[1, 2],
-        crop_ids=[3, 4]
+        crop_ids=[3, 4],
     )
+
 
 @pytest.fixture
 def mock_session():
     return Mock(spec=Session)
 
+
 @pytest.fixture
 def mock_product_repo():
     return Mock(spec=ProductRepository)
 
+
 @pytest.fixture
 def mock_get_pests():
-    return Mock(return_value=[
-        PestModel(id=1, name="pest1", description="desc1"),
-        PestModel(id=2, name="pest2", description="desc2")
-    ])
+    return Mock(
+        return_value=[
+            PestModel(id=1, name="pest1", description="desc1"),
+            PestModel(id=2, name="pest2", description="desc2"),
+        ]
+    )
+
 
 @pytest.fixture
 def mock_get_crops():
-    return Mock(return_value=[
-        CropModel(id=3, name="crop1", description="desc1"),
-        CropModel(id=4, name="crop2", description="desc2")
-    ])
+    return Mock(
+        return_value=[
+            CropModel(id=3, name="crop1", description="desc1"),
+            CropModel(id=4, name="crop2", description="desc2"),
+        ]
+    )
+
 
 @pytest.fixture
 def create_product_use_case(mock_product_repo, mock_get_pests, mock_get_crops):
     return CreateProductUseCase(mock_product_repo, mock_get_pests, mock_get_crops)
+
+
+@pytest.fixture
+def list_products_use_case(mock_product_repo):
+    return ListProductsUseCase(mock_product_repo)
+
+
+@pytest.fixture
+def list_product_use_case(mock_product_repo):
+    return ListProductUseCase(mock_product_repo)
+
+
+@pytest.fixture
+def update_product_use_case(mock_product_repo):
+    return UpdateProductUseCase(mock_product_repo)
+
+
+@pytest.fixture
+def delete_product_use_case(mock_product_repo):
+    return DeleteProductUseCase(mock_product_repo)

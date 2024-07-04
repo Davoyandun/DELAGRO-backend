@@ -3,6 +3,7 @@ from app.db.repositories.product_repository import ProductRepository
 from app.schemas.product import ProductCreate, Product
 from app.db.models.product import Product as ProductModel
 from sqlalchemy.orm import Session
+from typing import List, Optional
 
 
 class CreateProductUseCase:
@@ -43,20 +44,32 @@ class ListProductsUseCase:
     def __init__(self, product_repo: ProductRepository):
         self.product_repo = product_repo
 
-    def execute(self) -> List[Product]:
-        products = self.product_repo.get_all()
+    def execute(
+        self,
+        name: Optional[str] = None,
+        min_price: Optional[int] = None,
+        max_price: Optional[int] = None,
+        order_by: Optional[str] = None,
+        order: Optional[str] = "asc",
+    ) -> List[Product]:
+        products = self.product_repo.get_filtered(
+            name=name,
+            min_price=min_price,
+            max_price=max_price,
+            order_by=order_by,
+            order=order,
+        )
         return products
 
 
-class GetProductUseCase:
-    def __init__(self, product_repo: ProductRepository, get_pests, get_crops):
+class ListProductUseCase:
+    def __init__(self, product_repo: ProductRepository):
         self.product_repo = product_repo
-        self.get_pests = get_pests
-        self.get_crops = get_crops
 
-    def execute(self, product_id: int) -> Product:
-
+    def execute(self, product_id: int) -> Optional[Product]:
         product = self.product_repo.get(product_id)
+        if not product:
+            return None
         return product
 
 

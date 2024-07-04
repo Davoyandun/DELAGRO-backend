@@ -30,7 +30,9 @@ class BaseRepository(Generic[T]):
         self.db.refresh(db_item)
         return db_item
 
-    def delete(self, item: T) -> T:
-        self.db.delete(item)
-        self.db.commit()
+    def delete(self, item_id: int) -> T:
+        item = self.get(item_id)
+        if item:
+            self.db.delete(item)
+            self.db.commit()
         return item
