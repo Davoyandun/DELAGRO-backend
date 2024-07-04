@@ -11,15 +11,16 @@ router = APIRouter()
 def delete_crop(crop_id: int, db: Session = Depends(get_db)) -> Crop:
 
     crop_repo = CropRepository(db)
-    db_crop = crop_repo.get(crop_id)
-    if db_crop is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Crop not found"
-        )
 
     try:
-        deleted_crop = crop_repo.delete(db_crop)
+        deleted_crop = crop_repo.delete(crop_id)
+        if not deleted_crop:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Crop not found"
+            )
         return deleted_crop
+    except HTTPException as http_exc:
+        raise http_exc
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)

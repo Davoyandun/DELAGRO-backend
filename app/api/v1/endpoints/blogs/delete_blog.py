@@ -11,15 +11,16 @@ router = APIRouter()
 def delete_blog(blog_id: int, db: Session = Depends(get_db)) -> Blog:
 
     blog_repo = BlogRepository(db)
-    db_blog = blog_repo.get(blog_id)
-    if db_blog is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Blog not found"
-        )
 
     try:
-        deleted_blog = blog_repo.delete(db_blog)
+        deleted_blog = blog_repo.delete(blog_id)
+        if not deleted_blog:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Blog not found"
+            )
         return deleted_blog
+    except HTTPException as http_exc:
+        raise http_exc
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
