@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.schemas.crop import Crop
 from app.db.repositories.crop_repository import CropRepository
+from app.use_cases.crop_use_cases import ListCropsUseCase
 from typing import List
 
 router = APIRouter()
@@ -13,7 +14,9 @@ def read_crops(db: Session = Depends(get_db)) -> List[Crop]:
 
     try:
         crop_repo = CropRepository(db)
-        crops = crop_repo.get_all()
+        list_crops_use_case = ListCropsUseCase(crop_repo)
+
+        crops = list_crops_use_case.execute()
         return crops
     except Exception as e:
         raise HTTPException(

@@ -25,6 +25,13 @@ from app.use_cases.product_use_cases import (
     DeleteProductUseCase,
     ListProductUseCase,
 )
+from app.use_cases.crop_use_cases import (
+    CreateCropUseCase,
+    ListCropsUseCase,
+    ListCropUseCase,
+    UpdateCropUseCase,
+    DeleteCropUseCase,
+)
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 SQLALCHEMY_DATABASE_URL = f"sqlite:///{os.path.join(current_dir, 'test.db')}"
@@ -149,6 +156,14 @@ def mock_get_pests():
         ]
     )
 
+@pytest.fixture
+def mock_get_product():
+    return Mock(
+        return_value=[
+            ProductModel(id=1, name="product1", description="desc1"),
+            ProductModel(id=2, name="product2", description="desc2"),
+        ]
+    )
 
 @pytest.fixture
 def mock_get_crops():
@@ -163,6 +178,11 @@ def mock_get_crops():
 @pytest.fixture
 def create_product_use_case(mock_product_repo, mock_get_pests, mock_get_crops):
     return CreateProductUseCase(mock_product_repo, mock_get_pests, mock_get_crops)
+
+
+@pytest.fixture
+def mock_crop_repo():
+    return Mock()
 
 
 @pytest.fixture
@@ -183,3 +203,29 @@ def update_product_use_case(mock_product_repo):
 @pytest.fixture
 def delete_product_use_case(mock_product_repo):
     return DeleteProductUseCase(mock_product_repo)
+
+
+@pytest.fixture
+def create_crop_use_case(mock_crop_repo, mock_get_product):
+    return CreateCropUseCase(mock_crop_repo, mock_get_product)
+
+
+@pytest.fixture
+def list_crops_use_case(mock_crop_repo):
+    return ListCropsUseCase(mock_crop_repo)
+
+
+@pytest.fixture
+def list_crop_use_case(mock_crop_repo):
+    return ListCropUseCase(mock_crop_repo)
+
+
+@pytest.fixture
+def update_crop_use_case(mock_crop_repo):
+    return UpdateCropUseCase(mock_crop_repo)
+
+
+@pytest.fixture
+def delete_crop_use_case(mock_crop_repo):
+    return DeleteCropUseCase(mock_crop_repo)
+

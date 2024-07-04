@@ -3,7 +3,6 @@ from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.schemas.product import Product, ProductCreate
 from app.db.repositories.product_repository import ProductRepository
-from app.db.models.product import Product as ProductModel
 from app.use_cases.product_use_cases import CreateProductUseCase
 from app.services.pest_service import get_pests
 from app.services.crop_service import get_crops

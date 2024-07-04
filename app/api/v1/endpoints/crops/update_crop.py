@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.schemas.crop import Crop, CropCreate
 from app.db.repositories.crop_repository import CropRepository
+from app.use_cases.crop_use_cases import UpdateCropUseCase
 
 router = APIRouter()
 
@@ -11,14 +12,9 @@ router = APIRouter()
 def update_crop(crop_id: int, crop: CropCreate, db: Session = Depends(get_db)) -> Crop:
 
     crop_repo = CropRepository(db)
-    db_crop = crop_repo.get(crop_id)
-    if db_crop is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Crop not found"
-        )
-
+    update_crop_use_case = UpdateCropUseCase(crop_repo)
     try:
-        updated_crop = crop_repo.update(crop_id, crop)
+        updated_crop = update_crop_use_case.execute(crop_id, crop)
         return updated_crop
     except Exception as e:
         raise HTTPException(

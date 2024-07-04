@@ -3,8 +3,8 @@ from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.schemas.crop import CropCreate, Crop
 from app.db.repositories.crop_repository import CropRepository
-from app.db.models.crop import Crop as CropModel
 from app.services.product_service import get_product
+from app.use_cases.crop_use_cases import CreateCropUseCase
 
 router = APIRouter()
 
@@ -13,13 +13,10 @@ router = APIRouter()
 def create_crop(crop: CropCreate = Body(...), db: Session = Depends(get_db)) -> Crop:
 
     crop_repo = CropRepository(db)
-    db_crop = CropModel(name=crop.name, description=crop.description)
+    create_crop_use_case = CreateCropUseCase(crop_repo, get_product)
 
     try:
-        db_crop.products = get_product(db, crop.product_ids)
-
-        created_crop = crop_repo.create(db_crop)
-
+        created_crop = create_crop_use_case.execute(crop, db)
         return created_crop
 
     except HTTPException as http_exc:
