@@ -1,6 +1,5 @@
 from unittest.mock import Mock
 from app.use_cases.crop_use_cases import (
-    CreateCropUseCase,
     ListCropsUseCase,
     ListCropUseCase,
     UpdateCropUseCase,

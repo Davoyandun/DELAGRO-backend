@@ -32,6 +32,13 @@ from app.use_cases.crop_use_cases import (
     UpdateCropUseCase,
     DeleteCropUseCase,
 )
+from app.use_cases.pest_use_cases import (
+    CreatePestUseCase,
+    ListPestsUseCase,
+    ListPestUseCase,
+    UpdatePestUseCase,
+    DeletePestUseCase,
+)
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 SQLALCHEMY_DATABASE_URL = f"sqlite:///{os.path.join(current_dir, 'test.db')}"
@@ -156,6 +163,7 @@ def mock_get_pests():
         ]
     )
 
+
 @pytest.fixture
 def mock_get_product():
     return Mock(
@@ -164,6 +172,7 @@ def mock_get_product():
             ProductModel(id=2, name="product2", description="desc2"),
         ]
     )
+
 
 @pytest.fixture
 def mock_get_crops():
@@ -182,6 +191,16 @@ def create_product_use_case(mock_product_repo, mock_get_pests, mock_get_crops):
 
 @pytest.fixture
 def mock_crop_repo():
+    return Mock()
+
+
+@pytest.fixture
+def mock_pest_repo():
+    return Mock()
+
+
+@pytest.fixture
+def mock_product_repo():
     return Mock()
 
 
@@ -211,8 +230,23 @@ def create_crop_use_case(mock_crop_repo, mock_get_product):
 
 
 @pytest.fixture
+def create_pest_use_case(mock_pest_repo, mock_get_product):
+    return CreatePestUseCase(mock_pest_repo, mock_get_product)
+
+
+@pytest.fixture
 def list_crops_use_case(mock_crop_repo):
     return ListCropsUseCase(mock_crop_repo)
+
+
+@pytest.fixture
+def list_pests_use_case(mock_pest_repo):
+    return ListPestsUseCase(mock_crop_repo)
+
+
+@pytest.fixture
+def list_pest_use_case(mock_pest_repo):
+    return ListPestUseCase(mock_pest_repo)
 
 
 @pytest.fixture
@@ -221,11 +255,25 @@ def list_crop_use_case(mock_crop_repo):
 
 
 @pytest.fixture
+def list_pest_use_case(mock_pest_repo):
+    return ListCropUseCase(mock_pest_repo)
+
+
+@pytest.fixture
 def update_crop_use_case(mock_crop_repo):
     return UpdateCropUseCase(mock_crop_repo)
+
+
+@pytest.fixture
+def update_pest_use_case(mock_pest_repo):
+    return UpdatePestUseCase(mock_pest_repo)
 
 
 @pytest.fixture
 def delete_crop_use_case(mock_crop_repo):
     return DeleteCropUseCase(mock_crop_repo)
 
+
+@pytest.fixture
+def delete_pest_use_case(mock_pest_repo):
+    return DeletePestUseCase(mock_pest_repo)
